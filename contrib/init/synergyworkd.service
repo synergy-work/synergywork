@@ -1,0 +1,26 @@
+[Unit]
+Description=SYNERGYWORK's distributed currency daemon
+After=network.target
+
+[Service]
+User=synergywork
+Group=synergywork
+
+Type=forking
+PIDFile=/var/lib/synergyworkd/synergyworkd.pid
+
+ExecStart=/usr/bin/synergyworkd -daemon -pid=/var/lib/synergyworkd/synergyworkd.pid \
+          -conf=/etc/synergywork/synergywork.conf -datadir=/var/lib/synergyworkd
+
+ExecStop=-/usr/bin/synergywork-cli -conf=/etc/synergywork/synergywork.conf \
+         -datadir=/var/lib/synergyworkd stop
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

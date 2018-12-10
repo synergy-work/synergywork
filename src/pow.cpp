@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2015-2017 The SYNERGYWORK developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -19,7 +19,7 @@
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader* pblock)
 {
-    /* current difficulty formula, pivx - DarkGravity v3, written by Evan Duffield - evan@dashpay.io */
+    /* current difficulty formula, synergywork - DarkGravity v3, written by Evan Duffield - evan@dashpay.io */
     const CBlockIndex* BlockLastSolved = pindexLast;
     const CBlockIndex* BlockReading = pindexLast;
     int64_t nActualTimespan = 0;
@@ -119,15 +119,27 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits)
         return true;
 
     bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
+	//bnTarget.SetCompact(1986222, &fNegative, &fOverflow);
 
     // Check range
-    if (fNegative || bnTarget == 0 || fOverflow || bnTarget > Params().ProofOfWorkLimit())
+    if (fNegative || bnTarget == 0 || fOverflow || bnTarget > Params().ProofOfWorkLimit()){
+		LogPrintf("fOverflow ? %s\n", fOverflow ? "true" : "false");
+		LogPrintf("bnTarget %s\n", bnTarget.ToString().c_str());
+		LogPrintf("ProofOfWorkLimit %s\n", Params().ProofOfWorkLimit().ToString().c_str());
         return error("CheckProofOfWork() : nBits below minimum work");
+	}
 
     // Check proof of work matches claimed amount
-    if (hash > bnTarget)
-        return error("CheckProofOfWork() : hash doesn't match nBits");
-
+    if (hash > bnTarget){
+		// printf("nBits = %s\n", nBits);
+		// printf("hash = %s\n", hash.ToString().c_str());
+		//char chbnTarget = static_cast<char>(bnTarget);" + uint256(hash) + "
+		string s = to_string(nBits);
+		LogPrintf("nBits %s\n", s);
+		LogPrintf("hash %s\n", hash.ToString().c_str());
+		LogPrintf("bnTarget %s\n", bnTarget.ToString().c_str());
+		return error("CheckProofOfWork() : hash doesn't match nBits");
+	}
     return true;
 }
 

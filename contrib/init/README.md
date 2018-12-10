@@ -1,10 +1,10 @@
 Sample configuration files for:
 
-SystemD: pivxd.service
-Upstart: pivxd.conf
-OpenRC:  pivxd.openrc
-         pivxd.openrcconf
-CentOS:  pivxd.init
+SystemD: synergyworkd.service
+Upstart: synergyworkd.conf
+OpenRC:  synergyworkd.openrc
+         synergyworkd.openrcconf
+CentOS:  synergyworkd.init
 
 have been made available to assist packagers in creating node packages here.
 

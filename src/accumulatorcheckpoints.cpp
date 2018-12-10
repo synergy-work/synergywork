@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The PIVX developers
+// Copyright (c) 2018 The SYNERGYWORK developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -31,25 +31,27 @@ namespace AccumulatorCheckpoints
             v = read_json(GetRegTestCheckpoints());
         else
             return false;
-
+		
         if (v.empty())
             return false;
 
         for (unsigned int idx = 0; idx < v.size(); idx++) {
             const UniValue &val = v[idx];
             const UniValue &o = val.get_obj();
-
             const UniValue &vHeight = find_value(o, "height");
+		//printf("vHeight = %s\n", (vHeight.isNum() ? "num" : "not"));
             if (!vHeight.isNum())
                 return false;
 
             int nHeight = vHeight.get_int();
+			//printf("nHeight %s\n", ((nHeight < 0) ? " < 0 " : " >= 0"));
             if (nHeight < 0)
                 return false;
 
             Checkpoint checkpoint;
             for (auto denom : libzerocoin::zerocoinDenomList) {
                 const UniValue& vDenomValue = find_value(o, std::to_string(denom));
+				//printf("nHeight %s\n", ((nHeight < 0) ? " < 0 " : " >= 0"));
                 if (!vDenomValue.isStr()) {
                     return false;
                 }

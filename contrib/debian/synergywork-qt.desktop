@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=SYNERGYWORK
+Comment=SYNERGYWORK P2P Cryptocurrency
+Comment[fr]=SYNERGYWORK, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=SYNERGYWORK, eşten eşe kriptografik sanal para birimi
+Exec=synergywork-qt %u
+Terminal=false
+Type=Application
+Icon=synergywork128
+MimeType=x-scheme-handler/synergywork;
+Categories=Office;Finance;

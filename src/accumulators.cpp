@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 The PIVX developers
+// Copyright (c) 2017-2018 The SYNERGYWORK developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,7 +10,7 @@
 #include "init.h"
 #include "spork.h"
 #include "accumulatorcheckpoints.h"
-#include "zpivchain.h"
+#include "zswkchain.h"
 
 using namespace libzerocoin;
 
@@ -183,6 +183,7 @@ bool EraseCheckpoints(int nStartHeight, int nEndHeight)
 
 bool InitializeAccumulators(const int nHeight, int& nHeightCheckpoint, AccumulatorMap& mapAccumulators)
 {
+	
     if (nHeight < Params().Zerocoin_StartHeight())
         return error("%s: height is below zerocoin activated", __func__);
 
@@ -199,7 +200,7 @@ bool InitializeAccumulators(const int nHeight, int& nHeightCheckpoint, Accumulat
         nHeightCheckpoint = Params().Zerocoin_Block_LastGoodCheckpoint();
         return true;
     }
-
+	
     if (nHeight >= Params().Zerocoin_Block_V2_Start()) {
         //after v2_start, accumulators need to use v2 params
         mapAccumulators.Reset(Params().Zerocoin_Params(false));
@@ -223,7 +224,6 @@ bool InitializeAccumulators(const int nHeight, int& nHeightCheckpoint, Accumulat
         mapAccumulators.Reset();
     else if (!mapAccumulators.Load(nCheckpointPrev))
         return error("%s: failed to reset to previous checkpoint", __func__);
-
     nHeightCheckpoint = nHeight;
     return true;
 }
@@ -250,22 +250,22 @@ bool CalculateAccumulatorCheckpoint(int nHeight, uint256& nCheckpoint, Accumulat
 
     //Whether this should filter out invalid/fraudulent outpoints
     bool fFilterInvalid = nHeight >= Params().Zerocoin_Block_RecalculateAccumulators();
-
     //Accumulate all coins over the last ten blocks that havent been accumulated (height - 20 through height - 11)
     int nTotalMintsFound = 0;
-    CBlockIndex *pindex = chainActive[nHeightCheckpoint - 20];
-
+    CBlockIndex *pindex = chainActive[nHeightCheckpoint <= 20 ? nHeightCheckpoint : nHeightCheckpoint - 20];
+		LogPrintf("CalculateAccumulatorCheckpoint Zerocoin_StartHeight %d\n", Params().Zerocoin_StartHeight());
     while (pindex->nHeight < nHeight - 10) {
-        // checking whether we should stop this process due to a shutdown request
-        if (ShutdownRequested())
+		// checking whether we should stop this process due to a shutdown request
+        if (ShutdownRequested()){
+			LogPrintf("CalculateAccumulatorCheckpoint ShutdownRequested() 5.1\n");
             return false;
+		}
 
         //make sure this block is eligible for accumulation
-        if (pindex->nHeight < Params().Zerocoin_StartHeight()) {
-            pindex = chainActive[pindex->nHeight + 1];
+		if (pindex->nHeight < Params().Zerocoin_StartHeight()) {
+			pindex = chainActive[pindex->nHeight + 1];
             continue;
         }
-
         //grab mints from this block
         CBlock block;
         if(!ReadBlockFromDisk(block, pindex))
@@ -274,7 +274,6 @@ bool CalculateAccumulatorCheckpoint(int nHeight, uint256& nCheckpoint, Accumulat
         std::list<PublicCoin> listPubcoins;
         if (!BlockToPubcoinList(block, listPubcoins, fFilterInvalid))
             return error("%s: failed to get zerocoin mintlist from block %d", __func__, pindex->nHeight);
-
         nTotalMintsFound += listPubcoins.size();
         LogPrint("zero", "%s found %d mints\n", __func__, listPubcoins.size());
 
@@ -285,13 +284,12 @@ bool CalculateAccumulatorCheckpoint(int nHeight, uint256& nCheckpoint, Accumulat
         }
         pindex = chainActive.Next(pindex);
     }
-
     // if there were no new mints found, the accumulator checkpoint will be the same as the last checkpoint
     if (nTotalMintsFound == 0)
         nCheckpoint = chainActive[nHeight - 1]->nAccumulatorCheckpoint;
     else
         nCheckpoint = mapAccumulators.GetCheckpoint();
-
+	
     LogPrint("zero", "%s checkpoint=%s\n", __func__, nCheckpoint.GetHex());
     return true;
 }
@@ -304,7 +302,7 @@ bool InvalidCheckpointRange(int nHeight)
 bool ValidateAccumulatorCheckpoint(const CBlock& block, CBlockIndex* pindex, AccumulatorMap& mapAccumulators)
 {
     //V1 accumulators are completely phased out by the time this code hits the public and begins generating new checkpoints
-    //It is VERY IMPORTANT that when this is being run and height < v2_start, then zPIV need to be disabled at the same time!!
+    //It is VERY IMPORTANT that when this is being run and height < v2_start, then zSWK need to be disabled at the same time!!
     if (pindex->nHeight < Params().Zerocoin_Block_V2_Start() || fVerifyingBlocks)
         return true;
 
@@ -496,7 +494,7 @@ bool GenerateAccumulatorWitness(const PublicCoin &coin, Accumulator& accumulator
 
         nMintsAdded += AddBlockMintsToAccumulator(coin, nHeightMintAdded, pindex, &witnessAccumulator, true);
 
-        // 10 blocks were accumulated twice when zPIV v2 was activated
+        // 10 blocks were accumulated twice when zSWK v2 was activated
         if (pindex->nHeight == 1050010 && !fDoubleCounted) {
             pindex = chainActive[1050000];
             fDoubleCounted = true;

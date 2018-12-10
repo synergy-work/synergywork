@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
-// Copyright (c) 2017-2018 The PIVX developers
+// Copyright (c) 2017-2018 The SYNERGYWORK developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 #define BITCOIN_QT_BITCOINGUI_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/pivx-config.h"
+#include "config/synergywork-config.h"
 #endif
 
 #include "amount.h"
@@ -19,6 +19,7 @@
 #include <QPoint>
 #include <QPushButton>
 #include <QSystemTrayIcon>
+#include <QTreeWidgetItem>
 
 class ClientModel;
 class NetworkStyle;
@@ -287,6 +288,26 @@ private slots:
     void updateDisplayUnit(int newUnits);
     /** Tells underlying optionsModel to update its current display unit. */
     void onMenuSelection(QAction* action);
+};
+
+
+class TreeWidgetItem : public QTreeWidgetItem {
+public:
+    TreeWidgetItem() : QTreeWidgetItem(){}
+    TreeWidgetItem(QTreeWidgetItem* item) : QTreeWidgetItem(item){}
+    TreeWidgetItem(QTreeWidget* parent) : QTreeWidgetItem(parent){}
+private:
+    bool operator<(const QTreeWidgetItem &other)const {
+        int column = treeWidget()->sortColumn();
+        bool isNumber;
+        double item1 = text(column).toDouble(&isNumber);
+        if (isNumber) {
+            double item2 = other.text(column).toDouble(&isNumber);
+            if (isNumber)
+                return item1 < item2;
+        }
+        return text(column) < other.text(column);
+  }
 };
 
 #endif // BITCOIN_QT_BITCOINGUI_H
