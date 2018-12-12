@@ -1768,26 +1768,12 @@ int64_t GetBlockValue(int nHeight)
         nSubsidy = 250 * COIN;
     } else if (nHeight < (Params().NetworkID() == CBaseChainParams::TESTNET ? 145000 : 5000) && nHeight >= 3000) {
         nSubsidy = 200 * COIN;
-    } else if (nHeight <= Params().LAST_POW_BLOCK() && nHeight >= 5000) {
+    } else if (nHeight < 24200 && nHeight > 3000) {
         nSubsidy = 50 * COIN;
-    } else if (nHeight <= 100000 && nHeight > Params().LAST_POW_BLOCK()) {
-        nSubsidy = 50 * COIN;
-    } else if (nHeight <= 200000 && nHeight >= 100000) {
-        nSubsidy = 40.5 * COIN;
-    } else if (nHeight <= 300000 && nHeight >= 200000) {
-        nSubsidy = 36 * COIN;
-    } else if (nHeight <= 500000 && nHeight >= 300000) {
-        nSubsidy = 31.5 * COIN;
-    } else if (nHeight <= 750000 && nHeight >= 500000) {
-        nSubsidy = 27 * COIN;
-    } else if (nHeight <= 1000000 && nHeight >= 750000) {
-        nSubsidy = 22.5 * COIN;
-    } else if (nHeight <= 1500000 && nHeight >= 1000000) {
-        nSubsidy = 18 * COIN;
-    } else if (nHeight <= 3000000 && nHeight >= 2000000) {
-        nSubsidy = 13.5 * COIN;
-    } else if (nHeight <= 4000000 && nHeight >= 3000000) {
-        nSubsidy = 9 * COIN;
+    } else if (nHeight < 1000000 && nHeight >= 24200) {
+        nSubsidy = 10 * COIN;
+    } else if (nHeight < 4000000 && nHeight >= 1000000) {
+        nSubsidy = 8 * COIN;
     } else {
         nSubsidy = 5 * COIN;
     }
