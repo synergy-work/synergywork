@@ -171,42 +171,8 @@ public:
 
         hashGenesisBlock = genesis.GetHash();
 
-/*if(genesis.GetHash() != uint256("0x"))
-{
-printf("Searching for genesis block...\n");
-bool fNegative;
-bool fOverflow;
-uint256 hashTarget;
-hashTarget.SetCompact(genesis.nBits, &fNegative, &fOverflow);
-while(uint256(genesis.GetHash()) > hashTarget)
-{
-++genesis.nNonce;
-if (genesis.nNonce == 0)
-{
-printf("NONCE WRAPPED, incrementing time");
-std::cout << std::string("NONCE WRAPPED, incrementing time:\n");
-++genesis.nTime;
-}
-if (genesis.nNonce % 10000 == 0)
-{
-printf("Mainnet: nonce %08u: hash = %s \n", genesis.nNonce, genesis.GetHash().ToString().c_str());
-}
-}
-printf("block.nTime = %u \n", genesis.nTime);
-printf("block.nNonce = %u \n", genesis.nNonce);
-printf("block.GetHash = %s\n", genesis.GetHash().ToString().c_str());
-}
-printf("genesis.GetHash = %s\n", genesis.ToString().c_str());*/
-
         assert(genesis.hashMerkleRoot == uint256("0x7e8598a1dffdc1c029ba198827e8ee735af88ea205e40fd53d18d6a41d984227"));
         assert(hashGenesisBlock == uint256("0x0000043296c58f2ad8dbdcb4bb90db08a9c6348598fc1a0407e757fc348796be"));
-
-
-//        vSeeds.push_back(CDNSSeedData("fuzzbawls.pw", "synergywork.seed.fuzzbawls.pw"));     // Primary DNS Seeder from Fuzzbawls
-//        vSeeds.push_back(CDNSSeedData("fuzzbawls.pw", "synergywork.seed2.fuzzbawls.pw"));    // Secondary DNS Seeder from Fuzzbawls
-//        vSeeds.push_back(CDNSSeedData("coin-server.com", "coin-server.com"));         // Single node address
-//        vSeeds.push_back(CDNSSeedData("s3v3nh4cks.ddns.net", "s3v3nh4cks.ddns.net")); // Single node address
-//        vSeeds.push_back(CDNSSeedData("178.254.23.111", "178.254.23.111"));           // Single node address
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 62);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 13);
@@ -216,7 +182,7 @@ printf("genesis.GetHash = %s\n", genesis.ToString().c_str());*/
         // 	BIP44 coin type is from https://github.com/satoshilabs/slips/blob/master/slip-0044.md
         base58Prefixes[EXT_COIN_TYPE] = boost::assign::list_of(0x80)(0x00)(0x00)(0x77).convert_to_container<std::vector<unsigned char> >();
 
-        //convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
+        convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
 
         fMiningRequiresPeers = true;
         fAllowMinDifficultyBlocks = false;
@@ -304,41 +270,10 @@ public:
 
         hashGenesisBlock = genesis.GetHash();
 
-/*if(genesis.GetHash() != uint256("0x"))
-{
-printf("Searching for genesis block...\n");
-bool fNegative;
-bool fOverflow;
-uint256 hashTarget;
-hashTarget.SetCompact(genesis.nBits, &fNegative, &fOverflow);
-while(uint256(genesis.GetHash()) > hashTarget)
-{
-++genesis.nNonce;
-if (genesis.nNonce == 0)
-{
-printf("NONCE WRAPPED, incrementing time");
-std::cout << std::string("NONCE WRAPPED, incrementing time:\n");
-++genesis.nTime;
-}
-if (genesis.nNonce % 10000 == 0)
-{
-printf("Mainnet: nonce %08u: hash = %s \n", genesis.nNonce, genesis.GetHash().ToString().c_str());
-}
-}
-printf("block.nTime = %u \n", genesis.nTime);
-printf("block.nNonce = %u \n", genesis.nNonce);
-printf("block.GetHash = %s\n", genesis.GetHash().ToString().c_str());
-}
-printf("genesis.GetHash = %s\n", genesis.ToString().c_str());*/
-
         assert(hashGenesisBlock == uint256("0x00000fc06eaccadea616a7a60815eee2b849d0e091154b4a33bcc946badb9a6c"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
-//        vSeeds.push_back(CDNSSeedData("fuzzbawls.pw", "synergywork-testnet.seed.fuzzbawls.pw"));
-//        vSeeds.push_back(CDNSSeedData("fuzzbawls.pw", "synergywork-testnet.seed2.fuzzbawls.pw"));
-//        vSeeds.push_back(CDNSSeedData("s3v3nh4cks.ddns.net", "s3v3nh4cks.ddns.net"));
-//        vSeeds.push_back(CDNSSeedData("88.198.192.110", "88.198.192.110"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 139); // Testnet synergywork addresses start with 'x' or 'y'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 19);  // Testnet synergywork script addresses start with '8' or '9'
@@ -350,7 +285,7 @@ printf("genesis.GetHash = %s\n", genesis.ToString().c_str());*/
         // Testnet synergywork BIP44 coin type is '1' (All coin's testnet default)
         base58Prefixes[EXT_COIN_TYPE] = boost::assign::list_of(0x80)(0x00)(0x00)(0x01).convert_to_container<std::vector<unsigned char> >();
 
-        //convertSeed6(vFixedSeeds, pnSeed6_test, ARRAYLEN(pnSeed6_test));
+        convertSeed6(vFixedSeeds, pnSeed6_test, ARRAYLEN(pnSeed6_test));
 
         fMiningRequiresPeers = true;
         fAllowMinDifficultyBlocks = true;
@@ -403,33 +338,6 @@ public:
 
         hashGenesisBlock = genesis.GetHash();
         nDefaultPort = 32460;
-
-/*if(genesis.GetHash() != uint256("0x"))
-{
-printf("Searching for genesis block...\n");
-bool fNegative;
-bool fOverflow;
-uint256 hashTarget;
-hashTarget.SetCompact(genesis.nBits, &fNegative, &fOverflow);
-while(uint256(genesis.GetHash()) > hashTarget)
-{
-++genesis.nNonce;
-if (genesis.nNonce == 0)
-{
-printf("NONCE WRAPPED, incrementing time");
-std::cout << std::string("NONCE WRAPPED, incrementing time:\n");
-++genesis.nTime;
-}
-if (genesis.nNonce % 10000 == 0)
-{
-printf("Mainnet: nonce %08u: hash = %s \n", genesis.nNonce, genesis.GetHash().ToString().c_str());
-}
-}
-printf("block.nTime = %u \n", genesis.nTime);
-printf("block.nNonce = %u \n", genesis.nNonce);
-printf("block.GetHash = %s\n", genesis.GetHash().ToString().c_str());
-}
-printf("genesis.GetHash = %s\n", genesis.ToString().c_str());*/
 
         assert(hashGenesisBlock == uint256("0x00000e85670b3add9432c02be2ca9db1eb2a2480b0b7705d7f3825ff0c08edec"));
 
